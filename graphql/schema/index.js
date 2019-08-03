@@ -18,6 +18,12 @@ module.exports = buildSchema(`
     createdBooks: [Book!]
   }
 
+  type AuthData {
+    userId: ID!
+    token: String!
+    tokenExpiration: Int!
+  }
+
   input BookInput {
     title: String!
     author: String!
@@ -33,6 +39,7 @@ module.exports = buildSchema(`
 
   type RootQuery {
     books: [Book!]!
+    login(email: String!, password: String!): AuthData!
   }
 
   type RootMutation {
