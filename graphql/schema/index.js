@@ -38,6 +38,7 @@ module.exports = buildSchema(`
   type RootMutation {
     createBook(bookInput: BookInput): Book
     createUser(userInput: UserInput): User
+    deleteBook(bookId: ID!): Book
   }
 
   schema {

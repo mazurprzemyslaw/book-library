@@ -3,17 +3,29 @@ const bcrypt = require("bcryptjs");
 const Book = require("../../models/book");
 const User = require("../../models/user");
 
+const transformBook = book => {
+  return {
+    ...book._doc,
+    _id: book.id,
+    creator: user.bind(this, book.creator)
+  };
+};
+
 const books = async bookId => {
   try {
     const books = await Book.find({ _id: { $in: bookId } });
-    books.map(book => {
-      return {
-        ...book._doc,
-        _id: book.id,
-        creator: user.bind(this, book.creator)
-      };
+    return books.map(book => {
+      return transformBook(book);
     });
-    return books;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const singleBook = async bookId => {
+  try {
+    const book = await Book.findById(bookId);
+    return transformBook(book);
   } catch (err) {
     throw err;
   }
@@ -37,11 +49,7 @@ module.exports = {
     try {
       const books = await Book.find();
       return books.map(book => {
-        return {
-          ...book._doc,
-          _id: book.id,
-          creator: user.bind(this, book._doc.creator)
-        };
+        return transformBook(book);
       });
     } catch (err) {
       throw err;
@@ -59,11 +67,7 @@ module.exports = {
     let createdBook;
     try {
       const result = await book.save();
-      createdBook = {
-        ...result._doc,
-        _id: result._doc._id.toString(),
-        creator: user.bind(this, result._doc.creator)
-      };
+      createdBook = transformBook(result);
       const creator = await User.findById("5d40b1659283862388e16396");
 
       if (!creator) {
@@ -78,6 +82,17 @@ module.exports = {
       throw err;
     }
   },
+
+  deleteBook: async args => {
+    try {
+      const bookRemove = await Book.findById(args.bookId).populate("book");
+      await Book.deleteOne({ _id: args.bookId });
+      return bookRemove;
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createUser: async args => {
     try {
       const existingUser = await User.findOne({ email: args.userInput.email });
