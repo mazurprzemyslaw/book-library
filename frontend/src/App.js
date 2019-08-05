@@ -5,7 +5,7 @@ import AuthPage from "./pages/Auth";
 import BookPage from "./pages/Books";
 import MainNavigation from "./components/Navigation/MainNavigation";
 
-import "./App.css";
+import "./App.scss";
 
 function App() {
   return (
