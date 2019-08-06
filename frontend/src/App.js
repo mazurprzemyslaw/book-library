@@ -14,7 +14,7 @@ function App() {
         <MainNavigation />
         <main className="main-content">
           <Switch>
-            <Redirect from="/" to auth="/auth" exact />
+            <Redirect from="/" to="/auth" exact />
             <Route path="/auth" component={AuthPage} />
             <Route path="/books" component={BookPage} />
           </Switch>
