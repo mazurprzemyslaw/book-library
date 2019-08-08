@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 
 import "./Auth.scss";
+import AuthContext from ".././context/auth-context";
 
 class AuthPage extends Component {
   state = {
     isLogin: true
   };
+
+  static contextType = AuthContext;
 
   constructor(props) {
     super(props);
@@ -37,7 +40,7 @@ class AuthPage extends Component {
             tokenExpiration
           }
         }
-        `
+      `
     };
 
     if (!this.state.isLogin) {
@@ -67,7 +70,13 @@ class AuthPage extends Component {
         return res.json();
       })
       .then(resData => {
-        console.log(resData);
+        if (resData.data.login.token) {
+          this.context.login(
+            resData.data.login.token,
+            resData.data.login.userId,
+            resData.data.login.tokenExpiration
+          );
+        }
       })
       .catch(err => {
         console.log(err);
@@ -83,12 +92,12 @@ class AuthPage extends Component {
         </div>
         <div className="form-control">
           <label htmlFor="password">Password</label>
-          <input type="password" id="pasword" ref={this.passwordEl} />
+          <input type="password" id="password" ref={this.passwordEl} />
         </div>
         <div className="form-actions">
           <button type="submit">Submit</button>
           <button type="button" onClick={this.switchModeHandler}>
-            Switch {this.state.isLogin ? "Signup" : "Login"}
+            Switch to {this.state.isLogin ? "Signup" : "Login"}
           </button>
         </div>
       </form>
