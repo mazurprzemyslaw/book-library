@@ -7,10 +7,11 @@ module.exports = (req, res, next) => {
     return next();
   }
   const token = authHeader.split(" ")[1];
-  if (!token || token === " ") {
+  if (!token || token === "") {
     req.isAuth = false;
     return next();
   }
+  let decodedToken;
   try {
     decodedToken = jwt.verify(token, "somesupersecretkey");
   } catch (err) {
