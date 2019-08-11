@@ -1,9 +1,9 @@
 const Book = require("../../models/book");
 const User = require("../../models/user");
 
-const books = async bookId => {
+const books = async bookIds => {
   try {
-    const books = await Book.find({ _id: { $in: bookId } });
+    const books = await Book.find({ _id: { $in: bookIds } });
     return books.map(book => {
       return transformBook(book);
     });

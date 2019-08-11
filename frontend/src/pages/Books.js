@@ -66,14 +66,14 @@ class BooksPage extends Component {
       `
     };
 
-    const token = this.context.token;
+    let token = this.context.token;
 
     fetch("http://localhost:8000/graphql", {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer" + token
+        Authorization: `Bearer ${token}`
       }
     })
       .then(res => {
@@ -159,11 +159,11 @@ class BooksPage extends Component {
             <form>
               <div>
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" ref={this.titleElRef}></input>
+                <input type="text" id="title" ref={this.titleElRef} />
               </div>
               <div>
                 <label htmlFor="author">Author</label>
-                <input type="text" id="author" ref={this.authorElRef}></input>
+                <input type="text" id="author" ref={this.authorElRef} />
               </div>
               <div>
                 <label htmlFor="description">Description</label>
@@ -175,18 +175,21 @@ class BooksPage extends Component {
               </div>
               <div>
                 <label htmlFor="pages">Pages</label>
-                <input type="number" id="pages" ref={this.pagesElRef}></input>
+                <input type="number" id="pages" ref={this.pagesElRef} />
               </div>
               <div>
                 <label htmlFor="isbn">ISBN</label>
-                <input type="number" id="isbn" ref={this.isbnElRef}></input>
+                <input type="number" id="isbn" ref={this.isbnElRef} />
               </div>
             </form>
           </Modal>
         )}
         {this.context.token && (
           <div className="events-control">
-            <button onClick={this.startCreateBookHandler}>Create Book</button>
+            <p>Create your own book!</p>
+            <button className="btn" onClick={this.startCreateBookHandler}>
+              Create Book
+            </button>
           </div>
         )}
         <ul className="books__list">{bookList}</ul>

@@ -14,10 +14,12 @@ module.exports = {
       throw err;
     }
   },
+
   createBook: async (args, req) => {
     if (!req.isAuth) {
       throw new Error("Unauthenticated!");
     }
+
     const book = new Book({
       title: args.bookInput.title,
       author: args.bookInput.author,
@@ -26,7 +28,9 @@ module.exports = {
       isbn: +args.bookInput.isbn,
       creator: req.userId
     });
+
     let createdBook;
+
     try {
       const result = await book.save();
       createdBook = transformBook(result);
@@ -44,6 +48,7 @@ module.exports = {
       throw err;
     }
   },
+
   deleteBook: async args => {
     try {
       const bookRemove = await Book.findById(args.bookId).populate("book");
