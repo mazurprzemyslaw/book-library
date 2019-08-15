@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import Modal from "../components/Modal/Modal";
 import Backdrop from "../components/Backdrop/Backdrop";
+import BooksList from "../components/Books/BooksList/BooksList";
 import AuthContext from "../context/auth-context";
 
 class BooksPage extends Component {
@@ -137,14 +138,6 @@ class BooksPage extends Component {
   }
 
   render() {
-    const bookList = this.state.books.map(book => {
-      return (
-        <li key={book._id} className="books__list--item">
-          {book.title}
-        </li>
-      );
-    });
-
     return (
       <React.Fragment>
         {this.state.creating && <Backdrop />}
@@ -192,7 +185,7 @@ class BooksPage extends Component {
             </button>
           </div>
         )}
-        <ul className="books__list">{bookList}</ul>
+        <BooksList books={this.state.books} />
       </React.Fragment>
     );
   }
