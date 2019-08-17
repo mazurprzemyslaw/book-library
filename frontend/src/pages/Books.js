@@ -4,11 +4,13 @@ import Modal from "../components/Modal/Modal";
 import Backdrop from "../components/Backdrop/Backdrop";
 import BooksList from "../components/Books/BooksList/BooksList";
 import AuthContext from "../context/auth-context";
+import Spinner from "../components/Spinner/Spinner";
 
 class BooksPage extends Component {
   state = {
     creating: false,
-    books: []
+    books: [],
+    isLoading: false
   };
 
   static contextType = AuthContext;
@@ -58,10 +60,6 @@ class BooksPage extends Component {
             description
             pages
             isbn
-            creator {
-              _id
-              email
-            }
           }
         }
       `
@@ -84,7 +82,21 @@ class BooksPage extends Component {
         return res.json();
       })
       .then(resData => {
-        this.fetchBooks();
+        this.setState(prevState => {
+          const updatedBooks = [...prevState.books];
+          updatedBooks.push({
+            _id: resData.data.createBook._id,
+            title: resData.data.createBook.title,
+            author: resData.data.createBook.author,
+            description: resData.data.createBook.description,
+            pages: resData.data.createBook.pages,
+            isbn: resData.data.createBook.isbn,
+            creator: {
+              _id: this.context.userId
+            }
+          });
+          return { books: updatedBooks };
+        });
       })
       .catch(err => {
         console.log(err);
@@ -96,6 +108,7 @@ class BooksPage extends Component {
   };
 
   fetchBooks() {
+    this.setState({ isLoading: true });
     const requestBody = {
       query: `
           query {
@@ -130,10 +143,11 @@ class BooksPage extends Component {
       })
       .then(resData => {
         const books = resData.data.books;
-        this.setState({ books: books });
+        this.setState({ books: books, isLoading: false });
       })
       .catch(err => {
         console.log(err);
+        this.setState({ isLoading: false });
       });
   }
 
@@ -185,7 +199,14 @@ class BooksPage extends Component {
             </button>
           </div>
         )}
-        <BooksList books={this.state.books} />
+        {this.state.isLoading ? (
+          <Spinner />
+        ) : (
+          <BooksList
+            books={this.state.books}
+            authUserId={this.context.userId}
+          />
+        )}
       </React.Fragment>
     );
   }
