@@ -17,6 +17,7 @@ const booksList = props => {
         isbn={book.isbn}
         userId={props.authUserId}
         creatorId={book.creator._id}
+        onDetail={props.onViewDetail}
       />
     );
   });

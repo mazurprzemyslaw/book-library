@@ -14,7 +14,9 @@ const bookItem = props => (
           <h2>{props.pages}</h2>
         </div>
         <div>
-          <button>View Details</button>
+          <button onClick={props.onDetail.bind(this, props.bookId)}>
+            View Details
+          </button>
         </div>
       </div>
     ) : (

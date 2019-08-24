@@ -10,7 +10,8 @@ class BooksPage extends Component {
   state = {
     creating: false,
     books: [],
-    isLoading: false
+    isLoading: false,
+    selectedBook: null
   };
 
   static contextType = AuthContext;
@@ -104,7 +105,7 @@ class BooksPage extends Component {
   };
 
   modalCancelHandler = () => {
-    this.setState({ creating: false });
+    this.setState({ creating: false, selectedBook: null });
   };
 
   fetchBooks() {
@@ -151,6 +152,15 @@ class BooksPage extends Component {
       });
   }
 
+  showDetailHandler = bookId => {
+    this.setState(prevState => {
+      const selectedBook = prevState.books.find(e => e._id === bookId);
+      return { selectedBook: selectedBook };
+    });
+  };
+
+  bookUpdateHandler = () => {};
+
   render() {
     return (
       <React.Fragment>
@@ -191,6 +201,44 @@ class BooksPage extends Component {
             </form>
           </Modal>
         )}
+        {this.state.selectedBook && (
+          <Modal
+            title={this.state.selectedBook.title}
+            canCancel
+            canConfirm
+            onCancel={this.modalCancelHandler}
+            onConfirm={this.bookUpdateHandler}
+          >
+            <form>
+              <div>
+                <label htmlFor="title">{this.state.selectedBook.title}</label>
+                <input type="text" id="title" ref={this.titleElRef}></input>
+              </div>
+              <div>
+                <label htmlFor="author">{this.state.selectedBook.author}</label>
+                <input type="text" id="author" ref={this.authorElRef} />
+              </div>
+              <div>
+                <label htmlFor="description">
+                  {this.state.selectedBook.description}
+                </label>
+                <textarea
+                  id="description"
+                  rows="4"
+                  ref={this.descriptionElRef}
+                ></textarea>
+              </div>
+              <div>
+                <label htmlFor="pages">{this.state.selectedBook.pages}</label>
+                <input type="number" id="pages" ref={this.pagesElRef} />
+              </div>
+              <div>
+                <label htmlFor="isbn">{this.state.selectedBook.isbn}</label>
+                <input type="number" id="isbn" ref={this.isbnElRef} />
+              </div>
+            </form>
+          </Modal>
+        )}
         {this.context.token && (
           <div className="events-control">
             <p>Create your own book!</p>
@@ -205,6 +253,7 @@ class BooksPage extends Component {
           <BooksList
             books={this.state.books}
             authUserId={this.context.userId}
+            onViewDetail={this.showDetailHandler}
           />
         )}
       </React.Fragment>
